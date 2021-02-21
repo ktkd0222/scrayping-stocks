@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  scrayping:
+    build:
+      context: .
+      dockerfile: docker/ubuntu/Dockerfile
+      args:
+        - UBUNTU_USER=${UBUNTU_USER}
+        - UBUNTU_PASS=${UBUNTU_PASS}
+        - PYTHON_VER=${PYTHON_VER}
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app/ubuntu/:/home/jovyan/
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: docker/jupyter/Dockerfile
+    ports:
+      - 8888:8888
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token=''
+    #entrypoint: /home/jovyan/entrypoint.sh
+    volumes:
+      - ./app/jupyter/:/home/jovyan/
